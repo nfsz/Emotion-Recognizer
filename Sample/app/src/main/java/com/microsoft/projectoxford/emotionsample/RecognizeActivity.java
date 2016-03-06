@@ -70,6 +70,8 @@ import java.util.List;
 public class RecognizeActivity extends ActionBarActivity {
     private MediaPlayer happy;
     private MediaPlayer sad;
+    private MediaPlayer angry;
+    private MediaPlayer scary;
         // Flag to indicate which task is to be performed.
         private static final int REQUEST_SELECT_IMAGE = 0;
 
@@ -100,6 +102,8 @@ public class RecognizeActivity extends ActionBarActivity {
             mEditText = (EditText) findViewById(R.id.editTextResult);
             happy = MediaPlayer.create(this,R.raw.happy);
             sad = MediaPlayer.create(this,R.raw.sad);
+            angry = MediaPlayer.create(this,R.raw.angry);
+            scary = MediaPlayer.create(this,R.raw.scary);
         }
 
         @Override
@@ -152,6 +156,8 @@ public class RecognizeActivity extends ActionBarActivity {
             mEditText.setText("");
             if(happy.isPlaying()){happy.pause();happy.seekTo(0);}
             if(sad.isPlaying()){sad.pause();sad.seekTo(0);}
+            if(angry.isPlaying()){angry.pause();angry.seekTo(0);}
+            if(scary.isPlaying()){scary.pause();scary.seekTo(0);}
             Intent intent;
             intent = new Intent(RecognizeActivity.this, com.microsoft.projectoxford.emotionsample.helper.SelectImageActivity.class);
             startActivityForResult(intent, REQUEST_SELECT_IMAGE);
@@ -330,9 +336,14 @@ public class RecognizeActivity extends ActionBarActivity {
                             if(r.scores.sadness>x){x=r.scores.sadness;largest = "sadness";}
                             if(r.scores.surprise>x){x=r.scores.surprise;largest = "surprise";}
                         }
-                        if(largest.equals("anger") || largest.equals("contempt") || largest.equals("disgust") || largest.equals("sadness")
-                                ||largest.equals("fear") || largest.equals("neutral")) {
+                        if(largest.equals("anger") || largest.equals("disgust") || largest.equals("neutral")) {
+                            angry.start();
+                        }
+                        else if(largest.equals("sadness") || largest.equals("contempt")){
                             sad.start();
+                        }
+                        else if(largest.equals("fear")){
+                            scary.start();
                         }
                         else if(largest.equals("happiness") || largest.equals("surprise")){
                             happy.start();
