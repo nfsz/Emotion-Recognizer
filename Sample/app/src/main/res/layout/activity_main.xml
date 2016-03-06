@@ -6,26 +6,39 @@
     android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity"
     android:background="#ff8c00">
 
-    <GridLayout
+    <RelativeLayout
         android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:weightSum="1">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="200dp"
-            android:text="Takes a photo and suggests music/videos from emotion"/>
-
         <Button
-            android:layout_width="207dp"
-            android:layout_height="wrap_content"
+            android:layout_width="200dp"
+            android:layout_height="120dp"
             android:text="Click to start"
             android:id="@+id/button_recognize"
             android:layout_gravity="center_horizontal"
             android:onClick="activityRecognize"
-            android:layout_weight="0.29" />
-    </GridLayout>
+            android:layout_row="1"
+            android:layout_column="0"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true" />
+        <Button
+
+            android:layout_width = "80dp"
+            android:layout_height= "60dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="42dp"
+            android:onClick="happysong"
+            android:id="@+id/button"></Button>
+        <Button
+
+            android:layout_width="80dp"
+            android:layout_height="60dp"
+            android:layout_alignTop="@+id/button"
+            android:onClick="sadsong"
+            android:layout_alignParentStart="true"></Button>
+    </RelativeLayout>
 
 </LinearLayout>
