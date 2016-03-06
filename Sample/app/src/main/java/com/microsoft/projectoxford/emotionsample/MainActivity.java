@@ -39,9 +39,11 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-
+import android.media.MediaPlayer;
 
 public class MainActivity extends ActionBarActivity {
+    private MediaPlayer happy;
+    private MediaPlayer sad;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,9 +56,19 @@ public class MainActivity extends ActionBarActivity {
                     .setCancelable(false)
                     .show();
         }
-
+        happy = MediaPlayer.create(this,R.raw.happy);
+        sad = MediaPlayer.create(this,R.raw.sad);
     }
-
+    public void happysong(View view){
+        if(!happy.isPlaying()) {
+            happy.start();
+        }
+    }
+    public void sadsong(View view){
+        if(!sad.isPlaying()){
+            sad.start();
+        }
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
