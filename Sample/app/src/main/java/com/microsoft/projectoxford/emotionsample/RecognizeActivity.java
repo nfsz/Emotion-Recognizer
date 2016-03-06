@@ -150,7 +150,8 @@ public class RecognizeActivity extends ActionBarActivity {
         // Called when the "Select Image" button is clicked.
         public void selectImage(View view) {
             mEditText.setText("");
-
+            if(happy.isPlaying()){happy.pause();happy.seekTo(0);}
+            if(sad.isPlaying()){sad.pause();sad.seekTo(0);}
             Intent intent;
             intent = new Intent(RecognizeActivity.this, com.microsoft.projectoxford.emotionsample.helper.SelectImageActivity.class);
             startActivityForResult(intent, REQUEST_SELECT_IMAGE);
@@ -330,11 +331,11 @@ public class RecognizeActivity extends ActionBarActivity {
                             if(r.scores.surprise>x){x=r.scores.surprise;largest = "surprise";}
                         }
                         if(largest.equals("anger") || largest.equals("contempt") || largest.equals("disgust") || largest.equals("sadness")
-                                ||largest.equals("fear")) {
-                            if(!happy.isPlaying()){happy.start();}
+                                ||largest.equals("fear") || largest.equals("neutral")) {
+                            sad.start();
                         }
-                        else if(largest.equals("happiness") || largest.equals("neutral") || largest.equals("surprise")){
-                            if(!sad.isPlaying()){sad.start();}
+                        else if(largest.equals("happiness") || largest.equals("surprise")){
+                            happy.start();
                         }
                         else{}//do nothing in this situation
                         //mEditText.append(String.format("\t Score: %1$.5f\n", x));

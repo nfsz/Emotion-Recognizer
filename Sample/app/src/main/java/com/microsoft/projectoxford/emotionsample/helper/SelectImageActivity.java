@@ -121,6 +121,7 @@ public class SelectImageActivity extends ActionBarActivity {
 
     // When the button of "Select a Photo in Album" is pressed.
     public void selectImageInAlbum(View view) {
+
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
         if (intent.resolveActivity(getPackageManager()) != null) {
