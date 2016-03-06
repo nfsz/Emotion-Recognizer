@@ -23,22 +23,6 @@
             android:layout_column="0"
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true" />
-        <Button
-
-            android:layout_width = "80dp"
-            android:layout_height= "60dp"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginBottom="42dp"
-            android:onClick="happysong"
-            android:id="@+id/button"></Button>
-        <Button
-
-            android:layout_width="80dp"
-            android:layout_height="60dp"
-            android:layout_alignTop="@+id/button"
-            android:onClick="sadsong"
-            android:layout_alignParentStart="true"></Button>
     </RelativeLayout>
 
 </LinearLayout>

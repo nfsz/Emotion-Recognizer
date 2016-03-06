@@ -32,6 +32,7 @@
 //
 package com.microsoft.projectoxford.emotionsample;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -50,6 +51,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.microsoft.projectoxford.emotion.EmotionServiceClient;
@@ -68,10 +70,10 @@ import java.io.IOException;
 import java.util.List;
 
 public class RecognizeActivity extends ActionBarActivity {
-    private MediaPlayer happy;
-    private MediaPlayer sad;
-    private MediaPlayer angry;
-    private MediaPlayer scary;
+    private MediaPlayer mp = null;
+
+    Context context;
+
         // Flag to indicate which task is to be performed.
         private static final int REQUEST_SELECT_IMAGE = 0;
 
@@ -89,6 +91,8 @@ public class RecognizeActivity extends ActionBarActivity {
 
         private EmotionServiceClient client;
 
+        private Button bPlay, bPause;
+
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -100,10 +104,40 @@ public class RecognizeActivity extends ActionBarActivity {
 
             mButtonSelectImage = (Button) findViewById(R.id.buttonSelectImage);
             mEditText = (EditText) findViewById(R.id.editTextResult);
-            happy = MediaPlayer.create(this,R.raw.happy);
-            sad = MediaPlayer.create(this,R.raw.sad);
-            angry = MediaPlayer.create(this,R.raw.angry);
-            scary = MediaPlayer.create(this,R.raw.scary);
+
+            context = this;
+
+            bPause = (Button) findViewById(R.id.bPause);
+            bPlay = (Button) findViewById(R.id.bPlay);
+            bPause.setVisibility(View.GONE);
+            bPlay.setVisibility(View.GONE);
+            mEditText.setVisibility(View.GONE);
+            bPause.setEnabled(false);
+            bPlay.setEnabled(false);
+
+
+            bPlay.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(getApplicationContext(), "Playing sound", Toast.LENGTH_SHORT).show();
+                    mp.start();
+
+                    bPause.setEnabled(true);
+                    bPlay.setEnabled(false);
+                }
+            });
+
+            bPause.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(getApplicationContext(), "Pausing sound",Toast.LENGTH_SHORT).show();
+                    mp.pause();
+                    bPause.setEnabled(false);
+                    bPlay.setEnabled(true);
+                }
+            });
+
+
         }
 
         @Override
@@ -151,13 +185,23 @@ public class RecognizeActivity extends ActionBarActivity {
             }
         }
 
+    @Override
+    public void onPause() {
+        super.onPause();  // Always call the superclass method first
+
+        if (mp != null)
+            mp.release();
+
+        bPause.setVisibility(View.GONE);
+        bPlay.setVisibility(View.GONE);
+        bPause.setEnabled(false);
+        bPlay.setEnabled(false);
+
+    }
+
         // Called when the "Select Image" button is clicked.
         public void selectImage(View view) {
             mEditText.setText("");
-            if(happy.isPlaying()){happy.pause();happy.seekTo(0);}
-            if(sad.isPlaying()){sad.pause();sad.seekTo(0);}
-            if(angry.isPlaying()){angry.pause();angry.seekTo(0);}
-            if(scary.isPlaying()){scary.pause();scary.seekTo(0);}
             Intent intent;
             intent = new Intent(RecognizeActivity.this, com.microsoft.projectoxford.emotionsample.helper.SelectImageActivity.class);
             startActivityForResult(intent, REQUEST_SELECT_IMAGE);
@@ -336,21 +380,44 @@ public class RecognizeActivity extends ActionBarActivity {
                             if(r.scores.sadness>x){x=r.scores.sadness;largest = "sadness";}
                             if(r.scores.surprise>x){x=r.scores.surprise;largest = "surprise";}
                         }
-                        if(largest.equals("anger") || largest.equals("disgust") || largest.equals("neutral")) {
-                            angry.start();
+                        if(largest.equals("anger") ) {
+                            //angry.start();
+                            mp = MediaPlayer.create(context,R.raw.anger);
+                        }
+                        else if (largest.equals("disgust")){
+                            mp = MediaPlayer.create(context,R.raw.disgust);
+                        }
+                        else if (largest.equals("neutral")){
+                            mp = MediaPlayer.create(context,R.raw.neutral);
                         }
                         else if(largest.equals("sadness") || largest.equals("contempt")){
-                            sad.start();
+                            mp = MediaPlayer.create(context,R.raw.sad);
                         }
                         else if(largest.equals("fear")){
-                            scary.start();
+                            mp = MediaPlayer.create(context,R.raw.scary);
                         }
-                        else if(largest.equals("happiness") || largest.equals("surprise")){
-                            happy.start();
+                        else if (largest.equals("surprise")){
+                            mp = MediaPlayer.create(context,R.raw.surprise);
+                        }
+                        else if(largest.equals("happiness")){
+                            mp = MediaPlayer.create(context,R.raw.happy);
                         }
                         else{}//do nothing in this situation
+
+                        mp.start();
+                        bPause.setVisibility(View.VISIBLE);
+                        bPlay.setVisibility(View.VISIBLE);
+                        bPause.setEnabled(true);
+                        bPlay.setEnabled(false);
+
                         //mEditText.append(String.format("\t Score: %1$.5f\n", x));
-                        mEditText.append(largest);
+
+                        Toast.makeText(getApplicationContext(), "Hmm, you seem to be feeling " + largest + ".", Toast.LENGTH_LONG).show();
+
+
+                        //mEditText.append(largest);
+
+
                         //for (RecognizeResult r : result) {
                             //mEditText.append(String.format("\nFace #%1$d \n", count));
                             //mEditText.append(String.format("\t anger: %1$.5f\n", r.scores.anger));
